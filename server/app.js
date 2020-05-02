@@ -4,6 +4,9 @@ require('dotenv').config();
 // Database connection
 require('./configs/mongoose.config')
 
+//Google config
+require('./configs/google.config')
+
 // Application instance
 const express = require('express')
 const app = express()
