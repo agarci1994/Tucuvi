@@ -16,19 +16,21 @@ const createHttpTaskWithToken = async ({
     const payload = {
         idTask,
         url,
-        date
+        scheduleTime: date
     }
-    
+
+
+
     const {
         CloudTasksClient
     } = require('@google-cloud/tasks');
 
     const client = new CloudTasksClient();
-    
+
     const parent = client.queuePath(project, location, name);
     const convertedPayload = JSON.stringify(payload);
     const body = Buffer.from(convertedPayload).toString('base64');
-    
+
     const task = {
         httpRequest: {
             httpMethod: 'POST',
@@ -41,6 +43,7 @@ const createHttpTaskWithToken = async ({
             },
             body,
         },
+        scheduleTime: {seconds: date.getTime() / 1000}
     };
 
     try {
