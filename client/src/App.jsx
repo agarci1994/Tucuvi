@@ -13,7 +13,7 @@ function App() {
   const [csv, setCSV] = useState();
 
   const handleChange = ({ target: { id, value } }) =>
-    id === "id" ? setId(value) : id === "url" ? setUrl(value) : id=== "csv" ? setCSV(value) : setTime(value);
+    id === "id" ? setId(value) : id === "url" ? setUrl(value) : setTime(value);
 
   const handleCsv = ({target: {files}}) => {
   let fileArray
@@ -21,12 +21,12 @@ function App() {
       (new Blob([file])).text()
       .then(string => fileArray = convertCSVToArray(string, {type: 'array', separator: ';',}))
       .then(arr => validateCsvData(arr))
-      .then(elm => console.log(elm))
+      .then(arr => setCSV(arr))
       .catch(err => console.log(err))
     }
   }
 
-  const handleSubmit = () => sendForm({ timeTask, idTask, urlTask });
+  const handleSubmit = () => csv ? sendForm({csv, urlTask}) : sendForm({ timeTask, idTask, urlTask });
 
   return (
     <div className="App">
@@ -52,7 +52,7 @@ function App() {
         value={timeTask}
         onChange={handleChange}
       />
-      <input id="csv" type="file" value={csv} onChange={handleCsv} />
+      <input id="csv" type="file" onChange={handleCsv} />
       <button onClick={handleSubmit}>ENVIAR</button>
     </div>
   );

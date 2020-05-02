@@ -7,19 +7,30 @@ const email = process.env.SERVICE_ACCOUNT_EMAIL
 const createHttpTaskWithToken = async ({
     idTask,
     urlTask,
-    timeTask
+    timeTask,
+    csv
 }) => {
 
     const url = urlTask ? urlTask : urlDefault
-    const date = new Date(timeTask)
+    const listTask = {}
+    let date
 
-    const payload = {
-        idTask,
-        url,
-        scheduleTime: date
+    if (csv) {
+        csv.forEach((elm, i) => {
+            listTask[i] = {
+                payload: {
+                    idTask: elm[0]
+                },
+                date: new Date(elm[1])
+            }
+        })
+
+    } else {
+        date = new Date(timeTask)
+        payload = {
+            idTask
+        }
     }
-
-
 
     const {
         CloudTasksClient
@@ -30,6 +41,7 @@ const createHttpTaskWithToken = async ({
     const parent = client.queuePath(project, location, name);
     const convertedPayload = JSON.stringify(payload);
     const body = Buffer.from(convertedPayload).toString('base64');
+
 
     const task = {
         httpRequest: {
@@ -43,7 +55,9 @@ const createHttpTaskWithToken = async ({
             },
             body,
         },
-        scheduleTime: {seconds: date.getTime() / 1000}
+        scheduleTime: {
+            seconds: date.getTime() / 1000
+        }
     };
 
     try {
