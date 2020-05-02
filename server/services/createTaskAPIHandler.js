@@ -9,28 +9,28 @@ const createHttpTaskWithToken = async ({
     urlTask,
     timeTask
 }) => {
-    const payload = {
-        idTask,
-        urlTask
-    }
+
+    const url = urlTask ? urlTask : urlDefault
     const date = new Date(timeTask)
 
+    const payload = {
+        idTask,
+        url,
+        date
+    }
+    
     const {
         CloudTasksClient
     } = require('@google-cloud/tasks');
 
     const client = new CloudTasksClient();
     
-    const url = payload.urlTask ? payload.urlTask : urlDefault
-
     const parent = client.queuePath(project, location, name);
     const convertedPayload = JSON.stringify(payload);
     const body = Buffer.from(convertedPayload).toString('base64');
-
+    
     const task = {
         httpRequest: {
-            id: payload.idTask,
-            date,
             httpMethod: 'POST',
             url,
             oidcToken: {
