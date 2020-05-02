@@ -1,7 +1,7 @@
 const project = process.env.PROYECT_NAME
 const location = process.env.QUEUE_LOCATION
 const name = process.env.QUEUE_NAME
-const url = process.env.FUNCTION_URL
+const urlDefault = process.env.FUNCTION_URL
 const email = process.env.SERVICE_ACCOUNT_EMAIL
 
 const createHttpTaskWithToken = async ({
@@ -20,6 +20,8 @@ const createHttpTaskWithToken = async ({
     } = require('@google-cloud/tasks');
 
     const client = new CloudTasksClient();
+    
+    const url = payload.urlTask ? payload.urlTask : urlDefault
 
     const parent = client.queuePath(project, location, name);
     const convertedPayload = JSON.stringify(payload);
@@ -27,6 +29,8 @@ const createHttpTaskWithToken = async ({
 
     const task = {
         httpRequest: {
+            id: payload.idTask,
+            date,
             httpMethod: 'POST',
             url,
             oidcToken: {
