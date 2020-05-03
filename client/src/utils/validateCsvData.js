@@ -1,3 +1,4 @@
+// Validate Functions
 import validateCsvRow from '../utils/validateCsvRow'
 
 const validateCsvData = rows => {

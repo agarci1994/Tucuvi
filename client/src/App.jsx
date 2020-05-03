@@ -1,15 +1,19 @@
 import React, { useState } from "react";
+
+//Components
+import FormDefault from "./components/FormDefault";
+import FormCsv from "./components/FormCsv";
+// Services
 import sendForm from "./services/form.services";
 import convertCSVToArray from "convert-csv-to-array";
 import validateCsvData from "./utils/validateCsvData";
+// Material UI
 import Button from "@material-ui/core/Button";
 import SendIcon from "@material-ui/icons/Send";
 import Typography from "@material-ui/core/Typography";
-
-import FormDefault from "./components/FormDefault";
-import FormCsv from "./components/FormCsv";
-
+// CSS
 import "./App.css";
+
 
 function App() {
   const [timeTask, setTime] = useState();
@@ -23,17 +27,13 @@ function App() {
     id === "id" ? setId(value) : id === "url" ? setUrl(value) : setTime(value);
 
   const handleCsv = ({ target: { files } }) => {
-    let fileArray;
     for (let file of files) {
       new Blob([file])
         .text()
-        .then(
-          (string) =>
-            (fileArray = convertCSVToArray(string, {
+        .then(string => convertCSVToArray(string, {
               type: "array",
               separator: ";",
             }))
-        )
         .then((arr) => validateCsvData(arr))
         .then((arr) => setCSV(arr))
         .catch((err) => console.log(err));

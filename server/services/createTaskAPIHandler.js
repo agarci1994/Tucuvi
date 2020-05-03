@@ -1,14 +1,12 @@
-const {
-  GoogleAuth
-} = require('google-auth-library');
-const getTask = require('../services/getTaskAPIHandler')
-
+// Env
 const proyect = process.env.PROYECT_NAME;
 const location = process.env.QUEUE_LOCATION;
 const name = process.env.QUEUE_NAME;
 const urlDefault = process.env.FUNCTION_URL;
 const email = process.env.SERVICE_ACCOUNT_EMAIL;
 
+// Services
+const getTask = require('./getTaskAPIHandler')
 
 const createHttpTaskWithToken = async ({
   idTask,
@@ -16,7 +14,9 @@ const createHttpTaskWithToken = async ({
   timeTask,
   csv
 }) => {
+
   const url = urlTask ? urlTask : urlDefault;
+
   const listForm = {
     0: {
       payload: "",
@@ -48,21 +48,16 @@ const createHttpTaskWithToken = async ({
 
   const parent = client.queuePath(proyect, location, name)
 
-  let listTaskInQueue
-
   getTask()
-    .then(response => {
-
-      const times = response.map(elm => new Date(elm.scheduleTime).getTime() / 1000).sort()
-
+    .then(response => response.map(elm => new Date(elm.scheduleTime).getTime() / 1000).sort())
+    .then(times => {
       Object.keys(listForm).forEach(elm => {
 
         let seconds = listForm[elm].date.getTime() / 1000
-
         const interval = times.find(timesInQueue => timesInQueue < (seconds + 180) || timesInQueue > (seconds - 180))
-        if (interval.length) {
-          seconds += 180
-        }
+        
+        interval && (seconds += 180)
+
         const convertedPayload = JSON.stringify(listForm[elm].payload)
         const body = Buffer.from(convertedPayload).toString("base64")
 
@@ -90,9 +85,6 @@ const createHttpTaskWithToken = async ({
           .then(response => console.log(`Create Task with name: ${response[0].name}`))
           .catch(error => console.error(Error(error.message)))
       })
-
-
-
 
     })
     .catch(err => console.log(err))

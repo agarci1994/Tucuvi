@@ -1,13 +1,13 @@
+// Express
 const express = require('express');
 const formRoutes = express.Router();
+
+// Services
 const createTask = require('../services/createTaskAPIHandler')
 
- formRoutes.post('/create', (req, res) => {
-
+ formRoutes.post('/create', (req, res, next) => {
    const object = req.body
-    createTask(object).then(elm => console.log(elm)).catch(err => console.log(err))
-
-    res.status(202).send('📫 Your Task is Send 💌');
+    createTask(object).then(() => console.log("Your Task is Send 💌")).catch(err => next(err))
  });
 
 module.exports = formRoutes;
