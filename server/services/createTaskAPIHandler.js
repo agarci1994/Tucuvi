@@ -1,75 +1,66 @@
-const project = process.env.PROYECT_NAME
-const location = process.env.QUEUE_LOCATION
-const name = process.env.QUEUE_NAME
-const urlDefault = process.env.FUNCTION_URL
-const email = process.env.SERVICE_ACCOUNT_EMAIL
+const project = process.env.PROYECT_NAME;
+const location = process.env.QUEUE_LOCATION;
+const name = process.env.QUEUE_NAME;
+const urlDefault = process.env.FUNCTION_URL;
+const email = process.env.SERVICE_ACCOUNT_EMAIL;
 
-const createHttpTaskWithToken = async ({
-    idTask,
-    urlTask,
-    timeTask,
-    csv
-}) => {
+const createHttpTaskWithToken = async ({ idTask, urlTask, timeTask, csv }) => {
+  const url = urlTask ? urlTask : urlDefault;
+  const listForm = {0: {payload: "", date: ""}};
 
-    const url = urlTask ? urlTask : urlDefault
-    const listTask = {}
-    let date
+  if (csv) {
+    csv.forEach((elm, i) => {
+      listForm[i] = {
+        payload: {
+          idTask: elm[0],
+        },
+        date: new Date(elm[1]),
+      };
+    });
+  } else {
+    listForm[0].date = new Date(timeTask);
+    listForm[0].payload = {
+      idTask,
+    };
+  }
 
-    if (csv) {
-        csv.forEach((elm, i) => {
-            listTask[i] = {
-                payload: {
-                    idTask: elm[0]
-                },
-                date: new Date(elm[1])
-            }
-        })
+  const { CloudTasksClient } = require("@google-cloud/tasks")
 
-    } else {
-        date = new Date(timeTask)
-        payload = {
-            idTask
-        }
-    }
+  const client = new CloudTasksClient()
 
-    const {
-        CloudTasksClient
-    } = require('@google-cloud/tasks');
-
-    const client = new CloudTasksClient();
-
-    const parent = client.queuePath(project, location, name);
-    const convertedPayload = JSON.stringify(payload);
-    const body = Buffer.from(convertedPayload).toString('base64');
+  const parent = client.queuePath(project, location, name)
 
 
-    const task = {
+Object.keys(listForm).forEach(elm => {
+
+      const convertedPayload = JSON.stringify(listForm[elm].payload)
+      const body = Buffer.from(convertedPayload).toString("base64")
+
+      const task = {
         httpRequest: {
-            httpMethod: 'POST',
-            url,
-            oidcToken: {
-                serviceAccountEmail: email,
-            },
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body,
+          httpMethod: "POST",
+          url,
+          oidcToken: {
+            serviceAccountEmail: email,
+          },
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body,
         },
         scheduleTime: {
-            seconds: date.getTime() / 1000
-        }
-    };
+          seconds: listForm[elm].date.getTime() / 1000,
+        },
+      }
+ 
+      client.createTask({
+        parent,
+        task,
+      })
+      .then(response => console.log(`Create Task with name: ${response[0].name}`))
+      .catch (error => console.error(Error(error.message)))
+})
 
-    try {
-        const [response] = await client.createTask({
-            parent,
-            task
-        });
-        console.log(`Created task ${response.name}`);
-        return response.name;
-    } catch (error) {
-        console.error(Error(error.message));
-    }
 };
 
 module.exports = createHttpTaskWithToken;

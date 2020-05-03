@@ -1,0 +1,19 @@
+.none {
+    display: none;
+}
+
+.margin{
+    margin:20px
+}
+
+body{
+    background-color: #f1fbff;
+}
+
+.form{
+    background-color: rgb(255, 255, 253);
+    width: 50%;
+    margin: auto;
+    text-align: center;
+    padding: 1%;
+}
