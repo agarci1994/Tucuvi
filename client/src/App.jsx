@@ -5,6 +5,8 @@ import FormDefault from "./components/FormDefault";
 import FormCsv from "./components/FormCsv";
 // Services
 import sendForm from "./services/form.services";
+import receiveList from "./services/receive.services";
+//NPM
 import convertCSVToArray from "convert-csv-to-array";
 import validateCsvData from "./utils/validateCsvData";
 // Material UI
@@ -14,12 +16,12 @@ import Typography from "@material-ui/core/Typography";
 // CSS
 import "./App.css";
 
-
 function App() {
   const [timeTask, setTime] = useState();
   const [idTask, setId] = useState();
   const [urlTask, setUrl] = useState();
   const [csv, setCSV] = useState();
+  const [listTask, setList] = useState()
 
   const handleChange = ({ target: { id, value } }) =>
     id === "id" ? setId(value) : id === "url" ? setUrl(value) : setTime(value);
@@ -28,10 +30,12 @@ function App() {
     for (let file of files) {
       new Blob([file])
         .text()
-        .then(string => convertCSVToArray(string, {
-              type: "array",
-              separator: ";",
-            }))
+        .then((string) =>
+          convertCSVToArray(string, {
+            type: "array",
+            separator: ";",
+          })
+        )
         .then((arr) => validateCsvData(arr))
         .then((arr) => setCSV(arr))
         .catch((err) => console.log(err));
@@ -40,6 +44,12 @@ function App() {
 
   const handleSubmit = () =>
     csv ? sendForm({ csv, urlTask }) : sendForm({ timeTask, idTask, urlTask });
+
+  const getList = () => {
+    receiveList()
+      .then(response => setList(response))
+      .catch((err) => console.log(err));
+  };
 
   return (
     <div className="form">
@@ -52,7 +62,6 @@ function App() {
         handle={handleChange}
       />
       <FormCsv handle={handleCsv} csv={csv} />
-
       <Button
         variant="contained"
         color="primary"
@@ -61,6 +70,10 @@ function App() {
       >
         Send
       </Button>
+      <div>
+      <Button onClick={getList} color="primary">View tasks created</Button>
+        {listTask && listTask.map(elm => <Typography variant="subtitle1">{new Date(elm.scheduleTime).toString()}</Typography>)}
+      </div>
     </div>
   );
 }

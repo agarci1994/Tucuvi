@@ -17,3 +17,8 @@ body{
     text-align: center;
     padding: 1%;
 }
+
+.block {
+    display: block;
+    margin: auto;
+}
