@@ -4,7 +4,6 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import Typography from "@material-ui/core/Typography";
 
 const FormCsv = ({ handle, csv }) => {
-  console.log(csv)
   return (
     <div className="margin">
       <Typography variant="h6">
