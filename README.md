@@ -15,7 +15,7 @@ También te permite cargar un archivo CSV con dos columnas una con los ID y otra
 
 ### Construido con 🛠
 
-El proyecto se ha realizado con React para el cliente y Node.js para el servidor. Haciendo uso de: Reack Hooks, Material UI y Google Cloud.
+El proyecto se ha realizado con React para el cliente y Node.js para el servidor. Haciendo uso de: React Hooks, Material UI y Google Cloud.
 
 ## Mas información
 Puedes testar aquí: https://tucuvi.herokuapp.com/
