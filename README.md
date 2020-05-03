@@ -1,20 +1,21 @@
 # Tucuvi
-
-<p align="center"><img src="https://i.ibb.co/JjCL6Rw/Screenshot-2020-05-03-at-17-22-31.png" /></a></p>
-
 <h2 align="center">
 Formulario para programar tareas en Google Cloud Task
 </h2>
 
+<p align="center"><img src="https://i.ibb.co/JjCL6Rw/Screenshot-2020-05-03-at-17-22-31.png" /></a></p>
+
 ## Sobre el proyecto
 
-El formulario te permite enviar una tarea con un id y una llamada a una función de Google Functions, si no indicas función te asigna una por defecto. También te permite cargar un archivo CSV con dos columnas una con los ID y otra con la fecha a ejecutarse. 
+El formulario te permite enviar una tarea con un id y una llamada a una función de Google Functions, si no indicas ninguna función te asigna una por defecto. 
+
+También te permite cargar un archivo CSV con dos columnas una con los ID y otra con la fecha a ejecutarse. 
 
 <p align="center"><img src="https://i.ibb.co/Cm3vxTC/Screenshot-2020-05-03-at-17-24-04.png" /></p>
 
 ### Construido con 🛠
 
-El proyecto se ha realizado con React para el cliente y Node.js para el servidor. Haciendo uso de: Reack Hooks, Material UI y Google Cloud
+El proyecto se ha realizado con React para el cliente y Node.js para el servidor. Haciendo uso de: Reack Hooks, Material UI y Google Cloud.
 
 ## Mas información
 Puedes testar aquí: https://tucuvi.herokuapp.com/
@@ -26,7 +27,7 @@ Puedes testar aquí: https://tucuvi.herokuapp.com/
 Si desea ver el proyecto en detalle o incluso trabajar en él, no dude en clonar el repositorio:
 
 ```sh
-git clone https://github.com/your_username_/Project-Name.git
+git clone https://github.com/agarci1994/Tucuvi
 ```
 
 ## Contribución 💬
