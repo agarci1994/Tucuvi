@@ -21,8 +21,6 @@ function App() {
   const [urlTask, setUrl] = useState();
   const [csv, setCSV] = useState();
 
-  console.log(timeTask);
-
   const handleChange = ({ target: { id, value } }) =>
     id === "id" ? setId(value) : id === "url" ? setUrl(value) : setTime(value);
 
